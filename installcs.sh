@@ -3,7 +3,7 @@
 # Autorius: aaarnas
 # amxmodx.lt
 
-VERSION=2.4.4
+VERSION=2.4.5
 
 SCRIPT_NAME=`basename $0`
 MAIN_DIR="/usr"
@@ -52,7 +52,7 @@ check_version() {
 check_packages() {
 	
 	BIT64_CHECK=false && [ $(getconf LONG_BIT) == "64" ] && BIT64_CHECK=true
-	LIB_CHECK=false && [ "`(dpkg --get-selections ia32-libs | egrep -o \"(de)?install\") 2> /dev/null`" = "install" ] && LIB_CHECK=true
+	LIB_CHECK=false && [ "`(dpkg --get-selections lib32gcc1 | egrep -o \"(de)?install\") 2> /dev/null`" = "install" ] && LIB_CHECK=true
 	SCREEN_CHECK=false && [ "`(dpkg --get-selections screen | egrep -o \"(de)?install\") 2> /dev/null`" = "install" ] && SCREEN_CHECK=true
 	
 	if $BIT64_CHECK && ! $LIB_CHECK || ! $SCREEN_CHECK; then
@@ -61,7 +61,7 @@ check_packages() {
 		echo -e "Bus paleistos sios komandos:\n"
 		echo "apt-get update"
 		if $BIT64_CHECK && ! $LIB_CHECK; then
-		echo "apt-get -y install ia32-libs"
+		echo "apt-get -y install lib32gcc1"
 		fi
 		if ! $SCREEN_CHECK; then
 		echo "apt-get -y install screen"
@@ -74,7 +74,7 @@ check_packages() {
 		case "$NUMBER" in
 		"1")
 			if $BIT64_CHECK && ! $LIB_CHECK; then
-				apt-get -y install ia32-libs
+				apt-get -y install lib32gcc1
 			fi
 			if ! $SCREEN_CHECK; then
 				apt-get -y install screen
@@ -106,6 +106,7 @@ check_dir() {
 	
 		case "$NUMBER" in
 		"1")
+			SERVER_DIR="$SERVER_DIR$NUMBER"
 			return 0
 			;;
 		"2")
@@ -213,6 +214,7 @@ if [ $EXITVAL -gt 0 ]; then
 	echo "-------------------------------------------------------------------------------"
 	echo "SteamCMD vidine klaida. Klaidos kodas: $EXITVAL"
 	echo "Instaliacija nutraukiama..."
+	rmdir --ignore-fail-on-non-empty $INSTALL_DIR
 	exit 1
 fi
 
