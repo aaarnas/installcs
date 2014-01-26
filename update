@@ -9,6 +9,7 @@ MAIN_DIR="/usr"
 STEAMCMD_URL="http://media.steampowered.com/client/steamcmd_linux.tar.gz"
 STEAMCMD_DIR="$MAIN_DIR/steamcmd"
 STEAMCMD_CMD="steamcmd.sh"
+STEAMCMD_COMMANDS_FILE="/usr/_steamcmd_commands_list.txt"
 
 if [ ! -e "$BASEDIR/cstrike" ]; then
 	echo "-------------------------------------------------------------------------------"
@@ -35,7 +36,10 @@ if [ ! -e "$STEAMCMD_DIR/$STEAMCMD_CMD" ]; then
 	rm steamcmd_linux.tar.gz
 fi
 
-$STEAMCMD_DIR/$STEAMCMD_CMD +login anonymous +force_install_dir $BASEDIR +app_update 90 -beta beta validate +app_update 90 -beta beta validate +app_update 90 -beta beta validate +quit
+echo -e  "login anonymous\nforce_install_dir $INSTALL_DIR\napp_update 90 -beta beta validate\napp_update 90 -beta beta validate\napp_update 90 -beta beta validate\nquit" > $STEAMCMD_COMMANDS_FILE
+$STEAMCMD_DIR/$STEAMCMD_CMD +runscript $STEAMCMD_COMMANDS_FILE
+rm $STEAMCMD_COMMANDS_FILE
+
 echo "-------------------------------------------------------------------------------"
 echo "Serveris $SERVER_NAME atnaujintas"
 echo "-------------------------------------------------------------------------------"

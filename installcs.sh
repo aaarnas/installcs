@@ -3,7 +3,7 @@
 # Autorius: aaarnas
 # amxmodx.lt
 
-VERSION=2.4.5
+VERSION=2.4.6
 
 SCRIPT_NAME=`basename $0`
 MAIN_DIR="/usr"
@@ -11,6 +11,7 @@ MAIN_DIR="/usr"
 STEAMCMD_URL="http://media.steampowered.com/client/steamcmd_linux.tar.gz"
 STEAMCMD_DIR="$MAIN_DIR/steamcmd"
 STEAMCMD_CMD="steamcmd.sh"
+STEAMCMD_COMMANDS_FILE="/usr/_steamcmd_commands_list.txt"
 
 SERVER_DIR="hlds"
 INSTALL_DIR="$MAIN_DIR/$SERVER_DIR"
@@ -102,9 +103,9 @@ check_dir() {
 		echo "1. Taip"
 		echo "2. Noriu nurodyti kita direktorija"
 		echo "3. Iseiti"
-		read -p "Iveskite pasirinkta skaiciu: " NUMBER
+		read -p "Iveskite pasirinkta skaiciu: " MENU_NUMBER
 	
-		case "$NUMBER" in
+		case "$MENU_NUMBER" in
 		"1")
 			SERVER_DIR="$SERVER_DIR$NUMBER"
 			return 0
@@ -124,9 +125,9 @@ check_dir() {
 		echo "1. Taip"
 		echo "2. Noriu nurodyti kita direktorija"
 		echo "3. Iseiti"
-		read -p "Iveskite pasirinkta skaiciu: " NUMBER
+		read -p "Iveskite pasirinkta skaiciu: " MENU_NUMBER
 		
-		case "$NUMBER" in
+		case "$MENU_NUMBER" in
 		"1")
 			return 0
 			;;
@@ -208,7 +209,10 @@ if [ ! -e "$STEAMCMD_DIR/$STEAMCMD_CMD" ]; then
 	rm steamcmd_linux.tar.gz
 fi
 
-$STEAMCMD_DIR/$STEAMCMD_CMD +login anonymous +force_install_dir $INSTALL_DIR +app_update 90 -beta beta validate +app_update 90 -beta beta validate +app_update 90 -beta beta validate +quit
+echo -e  "login anonymous\nforce_install_dir $INSTALL_DIR\napp_update 90 -beta beta validate\napp_update 90 -beta beta validate\napp_update 90 -beta beta validate\nquit" > $STEAMCMD_COMMANDS_FILE
+$STEAMCMD_DIR/$STEAMCMD_CMD +runscript $STEAMCMD_COMMANDS_FILE
+rm $STEAMCMD_COMMANDS_FILE
+
 EXITVAL=$?
 if [ $EXITVAL -gt 0 ]; then
 	echo "-------------------------------------------------------------------------------"
